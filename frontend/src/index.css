@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nerv-red: #D30000;
+  --color-nerv-orange: #FF5C00;
+  --color-nerv-green: #39FF14;
+  --color-nerv-bg: #0A0A0C;
+  --color-nerv-grid: #1A1A1E;
+  
+  --font-serif: "Times New Roman", Times, serif;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+}
+
+body {
+  background-color: var(--color-nerv-bg);
+  color: white;
+  font-family: var(--font-sans);
+  background-image: 
+    linear-gradient(var(--color-nerv-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-nerv-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center top;
+  margin: 0;
+}
+
+.mechanically-compressed {
+  transform: scaleX(0.85);
+  display: inline-block;
+  transform-origin: left center;
+}
+
+.mechanically-compressed-center {
+  transform: scaleX(0.85);
+  display: inline-block;
+  transform-origin: center center;
+}
+
+.glow-text-red { text-shadow: 0 0 10px rgba(211,0,0,0.7); }
+.glow-text-orange { text-shadow: 0 0 10px rgba(255,92,0,0.7); }
+.glow-text-green { text-shadow: 0 0 10px rgba(57,255,20,0.7); }
+
+@keyframes slideDown {
+  0% { transform: translateY(-10px) scaleY(0.95); opacity: 0; filter: blur(4px); }
+  100% { transform: translateY(0) scaleY(1); opacity: 1; filter: blur(0); }
+}
