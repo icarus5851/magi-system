@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/health")
+@app.get("/")
 async def health_check():
     return {"status": "MAGI System Online", "version": "1.0"}
 
