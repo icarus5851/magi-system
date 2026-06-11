@@ -26,11 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.api_route("/", methods=["GET", "HEAD"])
-async def health_check(request):
-    if request.method == "HEAD":
-        return Response()
-    return {"status": "ok", "message": "MAGI is running"}
+@app.get("/health")
+async def health_check():
+    return {"status": "MAGI System Online", "version": "1.0"}
 
 @app.post("/api/evaluate", response_model=MasterMagiResponse)
 async def evaluate_strategic_decision(request: MagiRequest):
