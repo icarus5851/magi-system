@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -25,6 +25,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.api_route("/", methods=["GET", "HEAD"])
+async def health_check(request):
+    if request.method == "HEAD":
+        return Response()
+    return {"status": "ok", "message": "MAGI is running"}
 
 @app.post("/api/evaluate", response_model=MasterMagiResponse)
 async def evaluate_strategic_decision(request: MagiRequest):
