@@ -1,4 +1,5 @@
 import os
+import atexit
 from dotenv import load_dotenv
 from phoenix.otel import register
 
@@ -10,7 +11,10 @@ def init_tracer():
 
     tracer_provider = register(
         project_name="magi-system",
-        auto_instrument=True 
+        auto_instrument=True,
+        batch = True 
     )
+
+    atexit.register(tracer_provider.shutdown)
     
     print("System Log: Arize Phoenix Telemetry Online (Official Config).")
