@@ -2,6 +2,7 @@ import os
 import atexit
 from dotenv import load_dotenv
 from phoenix.otel import register
+import urllib.request
 
 def init_tracer():
     load_dotenv()
@@ -18,3 +19,10 @@ def init_tracer():
     atexit.register(tracer_provider.shutdown)
     
     print("System Log: Arize Phoenix Telemetry Online (Official Config).")
+
+
+try:
+    urllib.request.urlopen("https://app.phoenix.arize.com/s/praveensharma2709", timeout=5)
+    print("NETWORK CHECK: Phoenix reachable")
+except Exception as e:
+    print(f"NETWORK CHECK FAILED: {e}")
