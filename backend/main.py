@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
 from tracing import init_tracer
@@ -15,8 +16,16 @@ class MasterMagiResponse(BaseModel):
     caspar: AgentResponse
     auditor: AuditorResponse
 
-init_tracer() 
-app = FastAPI(title="NERV MAGI System")
+tracer_provider = init_tracer()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    print("System Log: Flushing telemetry before shutdown...")
+    tracer_provider.force_flush()
+    tracer_provider.shutdown()
+
+app = FastAPI(title="NERV MAGI System", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

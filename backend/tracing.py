@@ -19,6 +19,7 @@ def init_tracer():
     atexit.register(tracer_provider.shutdown)
     
     print("System Log: Arize Phoenix Telemetry Online (Official Config).")
+    return tracer_provider
 
 
 try:
