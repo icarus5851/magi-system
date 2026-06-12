@@ -1,11 +1,9 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import asyncio
-from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
-from tracing import init_tracer, flush_telemetry
+from tracing import init_tracer
 from models import MagiRequest, AgentResponse
 from orchestrator import run_magi_orchestrator
 from agents.auditor import call_auditor, AuditorResponse
@@ -17,16 +15,9 @@ class MasterMagiResponse(BaseModel):
     caspar: AgentResponse
     auditor: AuditorResponse
 
-tracer_provider = init_tracer()
+init_tracer()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    yield
-    print("System Log: Flushing telemetry before shutdown...")
-    tracer_provider.force_flush()
-    tracer_provider.shutdown()
-
-app = FastAPI(title="NERV MAGI System", lifespan=lifespan)
+app = FastAPI(title="NERV MAGI System")
 
 app.add_middleware(
     CORSMiddleware,
@@ -45,8 +36,6 @@ async def evaluate_strategic_decision(request: MagiRequest):
     
     print(f"System Log: Initiating MAGI evaluation for query...")
     orchestrator_data = await run_magi_orchestrator(request)
-
-    await asyncio.to_thread(flush_telemetry)
     
     print(f"System Log: MAGI computation complete. Handing to Auditor...")
     auditor_data = await call_auditor(
