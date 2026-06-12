@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import asyncio
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
-from tracing import init_tracer
+from tracing import init_tracer, flush_telemetry
 from models import MagiRequest, AgentResponse
 from orchestrator import run_magi_orchestrator
 from agents.auditor import call_auditor, AuditorResponse
@@ -44,6 +45,8 @@ async def evaluate_strategic_decision(request: MagiRequest):
     
     print(f"System Log: Initiating MAGI evaluation for query...")
     orchestrator_data = await run_magi_orchestrator(request)
+
+    await asyncio.to_thread(flush_telemetry)
     
     print(f"System Log: MAGI computation complete. Handing to Auditor...")
     auditor_data = await call_auditor(
